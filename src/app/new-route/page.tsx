@@ -1,7 +1,19 @@
+import { NewRouteForm } from "./NewRouteForm";
+
 export async function searchDirections(source: string, destination: string) {
   const [sourceResponse, destinationResponse] = await Promise.all([
-    fetch(`http://localhost:3000/places?text=${source}`),
-    fetch(`http://localhost:3000/places?text=${destination}`),
+    fetch(`http://localhost:3000/places?text=${source}`, {
+      // cache: 'force-cache',
+      // next: {
+      //   revalidate: 1 * 60 * 60 * 24, // 1 day
+      // }
+    }),
+    fetch(`http://localhost:3000/places?text=${destination}`, {
+      // cache: 'force-cache',
+      // next: {
+      //   revalidate: 1 * 60 * 60 * 24, // 1 day
+      // }
+    }),
   ]);
 
   if(!sourceResponse.ok) {
@@ -21,7 +33,13 @@ export async function searchDirections(source: string, destination: string) {
   const placeDestinationId = destinationData.candidates[0].place_id;
 
   const directionsResponse = await fetch(
-    `http://localhost:3000/directions?originId=${placeSourceId}&destinationId=${placeDestinationId}`
+    `http://localhost:3000/directions?originId=${placeSourceId}&destinationId=${placeDestinationId}`,
+    {
+      // cache: 'force-cache',
+      // next: {
+      //   revalidate: 1 * 60 * 60 * 24, // 1 day
+      // }
+    }
   );
 
   if(!directionsResponse.ok) {
@@ -65,8 +83,9 @@ export async function NewRoutePage({
             <input
               id="source"
               name="source"
-              type="text"
+              type="search"
               placeholder=""
+              defaultValue={source}
               className="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-contrast bg-default border-0 border-b-2 border-contrast appearance-none focus:outline-none focus:ring-0 focus:border-primary peer"
             />
              <label
@@ -82,6 +101,7 @@ export async function NewRoutePage({
               name="destination"
               type="search"
               placeholder=""
+              defaultValue={destination}
               className="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-contrast bg-default border-0 border-b-2 border-contrast appearance-none focus:outline-none focus:ring-0 focus:border-primary peer"
             />
             <label
@@ -118,6 +138,20 @@ export async function NewRoutePage({
               { directionsData.routes[0].legs[0].duration.text }
             </li>
           </ul>
+          <NewRouteForm>
+            {placeSourceId && (
+              <input type="hidden" name="sourceId" defaultValue={placeSourceId} />
+            )}
+            {placeDestinationId && (
+              <input type="hidden" name="destinationId" defaultValue={placeDestinationId} />
+            )}
+            <button
+              type="submit"
+              className="bg-main text-primary p-2 rounded text-xl font-bold"
+            >
+              Adicionar Rota
+            </button>
+          </NewRouteForm>
         </div>
         )}
       </div>
