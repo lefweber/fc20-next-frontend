@@ -1,3 +1,4 @@
+import { MapNewRoute } from "./MapNewRoute";
 import { NewRouteForm } from "./NewRouteForm";
 
 export async function searchDirections(source: string, destination: string) {
@@ -75,7 +76,7 @@ export async function NewRoutePage({
   }
 
   return (
-    <div className="flex flex-1 w-full h-full">
+    <div className="flex flex-1 w-full h-screen">
       <div className="w-1/3 p-4 h-full">
         <h4 className="text-3xl text-contrast mb-2">Nova rota</h4>
         <form className="flex flex-col space-y-4" method="get">
@@ -155,7 +156,7 @@ export async function NewRoutePage({
         </div>
         )}
       </div>
-      <div>mapa</div>
+      <MapNewRoute directionsData={directionsData} />
     </div>
   );
 }
