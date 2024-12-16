@@ -62,6 +62,11 @@ export function MapDriver(props: MapDriverProps) {
         }
       }
     );
+
+    return () => {
+      socket.disconnect();
+    };
+
   }, [route_id, start_location, end_location, map]);
 
   return <div className="w-2/3 h-full" ref={mapContainerRef} />;
